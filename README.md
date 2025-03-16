@@ -1,16 +1,39 @@
-# cat_app
+# Cats Tinder
 
-A new Flutter project.
+# Описание проекта
+Кототиндер — это мобильное приложение, разработанное с использованием Flutter, которое позволяет просматривать случайные изображения котов и оценивать их, нажав "лайк" или "дизлайк". Кроме того, можно увидеть подробную информацию о каждом коте.
 
-## Getting Started
+# Реализованные фичи
+**Рандомная загрузка изображений котиков** - на главном экране приложения отображаются случайные изображения котиков, порода которых известна
 
-This project is a starting point for a Flutter application.
+**Лайки и дизлайки** - пользователи могут оценивать изображения котиков, нажимая на специальные кнопки
 
-A few resources to get you started if this is your first Flutter project:
+**Просмотр детальной информации** - при нажатии на изображение котика открывается экран с детальной информацией. Это включает в себя породу и описание
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+**Свайпы для смены изображений** - пользовательский интерфейс поддерживает горизонтальные свайпы.
+Свайп вправо добавляет лайк изображению
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Кастомные шрифты и иконки** - использованы кастомыне шрифты и изображения для лайков и дизлайков
+
+**Настроена кастоманая иконка приложения** - иконка приложения отражает специфику
+
+# Скриншоты приложения
+**Кастомная иконка**
+
+![GET All Posts](/screens_pictures/app_icon.png)
+
+
+**Главный экран**
+
+![GET All Posts](/screens_pictures/main_screen.png)
+
+
+**Экран с описанием**
+
+![GET All Posts](/screens_pictures/details_screen.png)
+
+
+# Актуальная версия APK
+
+
+
