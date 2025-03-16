@@ -6,8 +6,6 @@ import 'detail_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class CatScreen extends StatefulWidget {
-  const CatScreen({super.key});
-
   @override
   _CatScreenState createState() => _CatScreenState();
 }
@@ -26,7 +24,7 @@ class _CatScreenState extends State<CatScreen> {
   Future<void> _fetchCat() async {
     setState(() {
       _isLoading = true;
-      _cat = null; // Для активации индикации загрузки в интерфейсе
+      _cat = null;
     });
 
     final cat = await CatService().fetchRandomCat();
@@ -46,62 +44,126 @@ class _CatScreenState extends State<CatScreen> {
     if (direction == DismissDirection.endToStart) {
       _incrementLikes();
     }
-    await _fetchCat(); // Загружаем нового котика
+    await _fetchCat();
   }
 
-  @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Random Cat'),
+        title: Text(
+          'CatsTinder',
+          style: TextStyle(
+            fontFamily: 'TitleFont',
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: Colors.red
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
       ),
-      body: _cat == null || _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Dismissible(
-              key: UniqueKey(),
-              direction: DismissDirection.horizontal,
-              onDismissed: (direction) {
-                _handleSwipe(direction);
-              },
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailScreen(cat: _cat!),
-                    ),
-                  );
-                },
-                child: Column(
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl: _cat!.imageUrl,
-                      height: 300,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                    Text('Breed: ${_cat!.breed}'),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        LikeButton(
-                          icon: Icons.thumb_up,
-                          onPressed: () {
-                            _incrementLikes();
-                            _fetchCat();
-                          },
-                        ),
-                        LikeButton(
-                          icon: Icons.thumb_down,
-                          onPressed: _fetchCat,
-                        ),
-                      ],
-                    ),
-                    Text('Likes: $_likeCounter'),
-                  ],
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          Positioned(
+            top: 20,
+            left: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Text(
+                'Breed: ${_cat != null ? _cat!.breed : 'Loading...'}',
+                style: TextStyle(
+                  fontFamily: 'TitleFont',
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
+          ),
+          Positioned(
+            top: screenHeight * 0.15,
+            left: 0,
+            right: 0,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: _isLoading
+                  ? CircularProgressIndicator()
+                  : Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.horizontal,
+                      onDismissed: _handleSwipe,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailScreen(cat: _cat!),
+                            ),
+                          );
+                        },
+                        child: CachedNetworkImage(
+                          imageUrl: _cat!.imageUrl,
+                          width: double.infinity,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+            ),
+          ),
+          Positioned(
+            top: screenHeight * 0.75,
+            left: 0,
+            right: 0,
+            child: Container(
+              color: Colors.transparent,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: Image.asset('assets/like.png'),
+                        ),
+                        iconSize: 60,
+                        onPressed: () {
+                          _incrementLikes();
+                          _fetchCat();
+                        },
+                      ),
+                      SizedBox(width: 60),
+                      IconButton(
+                        icon: SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: Image.asset('assets/dislike.png'),
+                        ),
+                        iconSize: 60,
+                        onPressed: _fetchCat,
+                      ),
+                    ],
+                  ),
+                  Text(
+                    'Likes: $_likeCounter',
+                    style: TextStyle(
+                      fontFamily: 'TitleFont',
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

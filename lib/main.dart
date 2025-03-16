@@ -12,10 +12,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cat App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const CatScreen(),
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: CatScreen(),
     );
   }
 }

@@ -12,7 +12,9 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cat Details'),
+        backgroundColor: Colors.white,
       ),
+      backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -27,14 +29,14 @@ class DetailScreen extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Breed: ${cat.breed}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'TitleFont',),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Description: ${cat.description}',
-              style: const TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16, fontFamily: 'TitleFont',),
             ),
           ),
         ],
