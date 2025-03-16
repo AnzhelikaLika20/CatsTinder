@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../models/cat.dart';
 import '../services/cat_service.dart';
-import '../widgets/like_button.dart';
-import 'detail_screen.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import '../widgets/app_bar.dart';
+import '../widgets/breed_text.dart';
+import '../widgets/cat_image.dart';
+import '../widgets/action_buttons.dart';
 
 class CatScreen extends StatefulWidget {
   @override
@@ -47,120 +48,26 @@ class _CatScreenState extends State<CatScreen> {
     await _fetchCat();
   }
 
+  @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'CatsTinder',
-          style: TextStyle(
-            fontFamily: 'TitleFont',
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: Colors.red
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-      ),
+      appBar: CustomAppBar(),
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          Positioned(
-            top: 20,
-            left: 0,
-            right: 0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Text(
-                'Breed: ${_cat != null ? _cat!.breed : 'Loading...'}',
-                style: TextStyle(
-                  fontFamily: 'TitleFont',
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
+          BreedText(cat: _cat),
+          CatImage(
+            isLoading: _isLoading,
+            cat: _cat,
+            onDismissed: _handleSwipe,
           ),
-          Positioned(
-            top: screenHeight * 0.15,
-            left: 0,
-            right: 0,
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: _isLoading
-                  ? CircularProgressIndicator()
-                  : Dismissible(
-                      key: UniqueKey(),
-                      direction: DismissDirection.horizontal,
-                      onDismissed: _handleSwipe,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailScreen(cat: _cat!),
-                            ),
-                          );
-                        },
-                        child: CachedNetworkImage(
-                          imageUrl: _cat!.imageUrl,
-                          width: double.infinity,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-            ),
-          ),
-          Positioned(
-            top: screenHeight * 0.75,
-            left: 0,
-            right: 0,
-            child: Container(
-              color: Colors.transparent,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Image.asset('assets/like.png'),
-                        ),
-                        iconSize: 60,
-                        onPressed: () {
-                          _incrementLikes();
-                          _fetchCat();
-                        },
-                      ),
-                      SizedBox(width: 60),
-                      IconButton(
-                        icon: SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Image.asset('assets/dislike.png'),
-                        ),
-                        iconSize: 60,
-                        onPressed: _fetchCat,
-                      ),
-                    ],
-                  ),
-                  Text(
-                    'Likes: $_likeCounter',
-                    style: TextStyle(
-                      fontFamily: 'TitleFont',
-                      fontSize: 18,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          ActionButtons(
+            likeCounter: _likeCounter,
+            onLike: () {
+              _incrementLikes();
+              _fetchCat();
+            },
+            onDislike: _fetchCat,
           ),
         ],
       ),

@@ -29,14 +29,14 @@ class DetailScreen extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Breed: ${cat.breed}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'TitleFont',),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'CustomFont',),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Description: ${cat.description}',
-              style: const TextStyle(fontSize: 16, fontFamily: 'TitleFont',),
+              style: const TextStyle(fontSize: 16, fontFamily: 'CustomFont',),
             ),
           ),
         ],
