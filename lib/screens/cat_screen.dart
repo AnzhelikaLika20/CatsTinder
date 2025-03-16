@@ -44,7 +44,7 @@ class _CatScreenState extends State<CatScreen> {
   }
 
   void _handleSwipe(DismissDirection direction) async {
-    if (direction == DismissDirection.endToStart) {
+    if (direction == DismissDirection.startToEnd) {
       _incrementLikes();
     }
     await _fetchCat();
