@@ -5,7 +5,8 @@ class ActionButtons extends StatelessWidget {
   final VoidCallback onLike;
   final VoidCallback onDislike;
 
-  ActionButtons({
+  const ActionButtons({
+    super.key,
     required this.likeCounter,
     required this.onLike,
     required this.onDislike,
@@ -34,7 +35,7 @@ class ActionButtons extends StatelessWidget {
                   ),
                   onPressed: onDislike,
                 ),
-                SizedBox(width: 60),
+                const SizedBox(width: 60),
                 IconButton(
                   icon: SizedBox(
                     width: 60,
@@ -42,12 +43,12 @@ class ActionButtons extends StatelessWidget {
                     child: Image.asset('assets/like.png'),
                   ),
                   onPressed: onLike,
-                ),                
+                ),
               ],
             ),
             Text(
               'Likes: $likeCounter',
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'CustomFont',
                 fontSize: 18,
                 color: Colors.black,

@@ -7,6 +7,8 @@ import '../widgets/cat_image.dart';
 import '../widgets/action_buttons.dart';
 
 class CatScreen extends StatefulWidget {
+  const CatScreen({super.key});
+
   @override
   _CatScreenState createState() => _CatScreenState();
 }
@@ -51,16 +53,12 @@ class _CatScreenState extends State<CatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(),
       backgroundColor: Colors.white,
       body: Stack(
         children: [
           BreedText(cat: _cat),
-          CatImage(
-            isLoading: _isLoading,
-            cat: _cat,
-            onDismissed: _handleSwipe,
-          ),
+          CatImage(isLoading: _isLoading, cat: _cat, onDismissed: _handleSwipe),
           ActionButtons(
             likeCounter: _likeCounter,
             onLike: () {

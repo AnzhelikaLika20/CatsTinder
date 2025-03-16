@@ -8,7 +8,8 @@ class CatImage extends StatelessWidget {
   final Cat? cat;
   final Function(DismissDirection) onDismissed;
 
-  CatImage({
+  const CatImage({
+    super.key,
     required this.isLoading,
     required this.cat,
     required this.onDismissed,
@@ -24,30 +25,31 @@ class CatImage extends StatelessWidget {
       right: 0,
       child: Align(
         alignment: Alignment.topCenter,
-        child: isLoading
-            ? CircularProgressIndicator()
-            : Dismissible(
-                key: UniqueKey(),
-                direction: DismissDirection.horizontal,
-                onDismissed: onDismissed,
-                child: GestureDetector(
-                  onTap: () {
-                    if (cat != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailScreen(cat: cat!),
-                        ),
-                      );
-                    }
-                  },
-                  child: CachedNetworkImage(
-                    imageUrl: cat!.imageUrl,
-                    width: double.infinity,
-                    fit: BoxFit.contain,
+        child:
+            isLoading
+                ? const CircularProgressIndicator()
+                : Dismissible(
+                  key: UniqueKey(),
+                  direction: DismissDirection.horizontal,
+                  onDismissed: onDismissed,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (cat != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailScreen(cat: cat!),
+                          ),
+                        );
+                      }
+                    },
+                    child: CachedNetworkImage(
+                      imageUrl: cat!.imageUrl,
+                      width: double.infinity,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
-              ),
       ),
     );
   }

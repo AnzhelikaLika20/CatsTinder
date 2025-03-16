@@ -4,7 +4,7 @@ import '../models/cat.dart';
 class BreedText extends StatelessWidget {
   final Cat? cat;
 
-  BreedText({required this.cat});
+  const BreedText({super.key, required this.cat});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class BreedText extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Text(
           'Breed: ${cat != null ? cat!.breed : 'Loading...'}',
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'CustomFont',
             fontSize: 24,
             fontWeight: FontWeight.bold,

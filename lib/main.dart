@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Cat App',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: CatScreen(),
+      home: const CatScreen(),
     );
   }
 }
