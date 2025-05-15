@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entity/cat.dart';
 import '../../services/cat_service.dart';
@@ -8,14 +7,15 @@ import '../widgets/app_bar.dart';
 import '../widgets/breed_text.dart';
 import '../widgets/cat_image.dart';
 import '../widgets/action_buttons.dart';
+import '../widgets/favorite_counter_button.dart';
 import '../cubit/liked_cats_cubit.dart';
-import 'liked_cats_screen.dart';
+import 'detail_screen.dart';
 
 class CatScreen extends StatefulWidget {
   const CatScreen({super.key});
 
   @override
-  _CatScreenState createState() => _CatScreenState();
+  State<CatScreen> createState() => _CatScreenState();
 }
 
 class _CatScreenState extends State<CatScreen> {
@@ -34,11 +34,35 @@ class _CatScreenState extends State<CatScreen> {
       _cat = null;
     });
 
-    final cat = await CatService().fetchRandomCat();
-    setState(() {
-      _cat = cat;
-      _isLoading = false;
-    });
+    try {
+      final cat = await CatService().fetchRandomCat();
+      setState(() {
+        _cat = cat;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder:
+            (context) => AlertDialog(
+              backgroundColor: Colors.white,
+              title: const Text('Ошибка сети'),
+              content: Text(
+                'Не удалось загрузить котика. Проверьте соединение с интернетом.\n$e',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+      );
+    }
   }
 
   void _likeAndSaveCat() {
@@ -59,49 +83,47 @@ class _CatScreenState extends State<CatScreen> {
     return Scaffold(
       appBar: const CustomAppBar(),
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          BreedText(cat: _cat),
-          CatImage(isLoading: _isLoading, cat: _cat, onDismissed: _handleSwipe),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    BlocBuilder<LikedCatsCubit, LikedCatsState>(
-                      bloc: GetIt.I<LikedCatsCubit>(),
-                      builder: (context, state) {
-                        final likedCount = state.likedCats.length;
-                        return ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const LikedCatsScreen(),
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.favorite),
-                          label: Text('Любимчики ($likedCount)'),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    ActionButtons(
-                      onLike: () {
-                        _likeAndSaveCat();
-                        _fetchCat();
-                      },
-                      onDislike: _fetchCat,
-                    ),
-                  ],
-                ),
+      body: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Spacer(),
+            BreedText(cat: _cat),
+            const Spacer(),
+            _cat != null
+                ? CatImage(
+                  cat: _cat!,
+                  isLoading: _isLoading,
+                  onDismissed: _handleSwipe,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailScreen(cat: _cat!),
+                      ),
+                    );
+                  },
+                )
+                : const CircularProgressIndicator(),
+            const Spacer(),
+            const FavoriteCounterButton(),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: ActionButtons(
+                onLike: () {
+                  if (_cat != null) {
+                    _likeAndSaveCat();
+                    _fetchCat();
+                  }
+                },
+                onDislike: _fetchCat,
               ),
             ),
-          ),
-        ],
+            const Spacer(),
+          ],
+        ),
       ),
     );
   }

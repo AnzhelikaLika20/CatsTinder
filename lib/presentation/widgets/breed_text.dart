@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../domain/entity/cat.dart';
 
 class BreedText extends StatelessWidget {
@@ -9,22 +8,18 @@ class BreedText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      top: 20,
-      left: 0,
-      right: 0,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
-        child: Text(
-          'Breed: ${cat != null ? cat!.breed : 'Loading...'}',
-          style: const TextStyle(
-            fontFamily: 'CustomFont',
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-          textAlign: TextAlign.center,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: Text(
+        cat != null ? cat!.breed : 'Загрузка...',
+        style: const TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 26,
+          fontWeight: FontWeight.w600,
+          color: Color(0xFFFF69B4),
+          letterSpacing: 1.2,
         ),
+        textAlign: TextAlign.center,
       ),
     );
   }

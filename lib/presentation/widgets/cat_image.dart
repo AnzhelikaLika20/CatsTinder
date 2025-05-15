@@ -1,56 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../domain/entity/cat.dart';
-import '../screens/detail_screen.dart';
 
 class CatImage extends StatelessWidget {
+  final Cat cat;
   final bool isLoading;
-  final Cat? cat;
-  final Function(DismissDirection) onDismissed;
+  final void Function(DismissDirection)? onDismissed;
+  final VoidCallback? onTap;
 
   const CatImage({
     super.key,
-    required this.isLoading,
     required this.cat,
-    required this.onDismissed,
+    this.isLoading = false,
+    this.onDismissed,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
+    double imgHeight = MediaQuery.of(context).size.height * 0.35;
 
-    return Positioned(
-      top: screenHeight * 0.15,
-      left: 0,
-      right: 0,
-      child: Align(
-        alignment: Alignment.topCenter,
-        child:
-            isLoading
-                ? const CircularProgressIndicator()
-                : Dismissible(
-                  key: UniqueKey(),
-                  direction: DismissDirection.horizontal,
-                  onDismissed: onDismissed,
-                  child: GestureDetector(
-                    onTap: () {
-                      if (cat != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailScreen(cat: cat!),
-                          ),
-                        );
-                      }
-                    },
-                    child: CachedNetworkImage(
-                      imageUrl: cat!.imageUrl,
-                      width: double.infinity,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
+    Widget content = GestureDetector(
+      onTap: onTap,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: CachedNetworkImage(
+          imageUrl: cat.imageUrl,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: imgHeight,
+          placeholder:
+              (context, url) =>
+                  const Center(child: CircularProgressIndicator()),
+          errorWidget:
+              (context, url, error) => const Icon(Icons.error, size: 64),
+        ),
       ),
+    );
+
+    if (onDismissed != null) {
+      content = Dismissible(
+        key: UniqueKey(),
+        direction: DismissDirection.horizontal,
+        onDismissed: onDismissed!,
+        child: content,
+      );
+    }
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      width: MediaQuery.of(context).size.width * 0.8,
+      height: imgHeight,
+      child:
+          isLoading
+              ? const Center(
+                child: CircularProgressIndicator(color: Color(0xFFF8BBD0)),
+              )
+              : content,
     );
   }
 }

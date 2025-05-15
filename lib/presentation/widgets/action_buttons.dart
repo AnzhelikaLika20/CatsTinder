@@ -43,7 +43,7 @@ class ActionButtons extends StatelessWidget {
                   onPressed: onLike,
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

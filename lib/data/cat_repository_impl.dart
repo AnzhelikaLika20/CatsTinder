@@ -7,9 +7,9 @@ class CatRepositoryImpl implements CatRepository {
     await Future.delayed(const Duration(seconds: 2));
     return List.generate(
       10,
-          (i) => Cat(
+      (i) => Cat(
         id: 'cat_$i',
-        imageUrl: 'https://placekitten.com/400/40${i%5}',
+        imageUrl: 'https://placekitten.com/400/40${i % 5}',
         breed: 'Breed ${i % 3}',
         description: 'Description of Breed ${i % 3}',
       ),

@@ -13,10 +13,7 @@ class LikedCatsState {
           ? likedCats
           : likedCats.where((cat) => cat.cat.breed == breedFilter).toList();
 
-  LikedCatsState copyWith({
-    List<LikedCat>? likedCats,
-    String? breedFilter,
-  }) =>
+  LikedCatsState copyWith({List<LikedCat>? likedCats, String? breedFilter}) =>
       LikedCatsState(
         likedCats: likedCats ?? this.likedCats,
         breedFilter: breedFilter ?? this.breedFilter,
@@ -27,15 +24,22 @@ class LikedCatsCubit extends Cubit<LikedCatsState> {
   LikedCatsCubit() : super(LikedCatsState(likedCats: [], breedFilter: null));
 
   void addCat(Cat cat) {
-    emit(state.copyWith(
-        likedCats: [...state.likedCats, LikedCat(cat: cat, likedAt: DateTime.now())]
-    ));
+    emit(
+      state.copyWith(
+        likedCats: [
+          ...state.likedCats,
+          LikedCat(cat: cat, likedAt: DateTime.now()),
+        ],
+      ),
+    );
   }
 
   void removeCat(LikedCat likedCat) {
-    emit(state.copyWith(
-        likedCats: state.likedCats.where((c) => c != likedCat).toList()
-    ));
+    emit(
+      state.copyWith(
+        likedCats: state.likedCats.where((c) => c != likedCat).toList(),
+      ),
+    );
   }
 
   void setBreedFilter(String? breed) {
