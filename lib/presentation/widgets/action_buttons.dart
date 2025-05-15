@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ActionButtons extends StatelessWidget {
-  final int likeCounter;
   final VoidCallback onLike;
   final VoidCallback onDislike;
 
   const ActionButtons({
     super.key,
-    required this.likeCounter,
     required this.onLike,
     required this.onDislike,
   });
@@ -45,15 +43,7 @@ class ActionButtons extends StatelessWidget {
                   onPressed: onLike,
                 ),
               ],
-            ),
-            Text(
-              'Likes: $likeCounter',
-              style: const TextStyle(
-                fontFamily: 'CustomFont',
-                fontSize: 18,
-                color: Colors.black,
-              ),
-            ),
+            )
           ],
         ),
       ),

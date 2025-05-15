@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/cat.dart';
+
+import '../../domain/entity/cat.dart';
 
 class BreedText extends StatelessWidget {
   final Cat? cat;

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/cat.dart';
+
+import '../domain/entity/cat.dart';
 
 class CatService {
   final String _baseUrl = 'https://api.thecatapi.com/v1/images/search';
