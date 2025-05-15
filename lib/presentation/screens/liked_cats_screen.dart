@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get_it/get_it.dart';
+import '../widgets/liked_cat_card.dart';
+import '../widgets/liked_cats_filter.dart';
 import '../cubit/liked_cats_cubit.dart';
 
 class LikedCatsScreen extends StatelessWidget {
+  const LikedCatsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
@@ -12,50 +15,31 @@ class LikedCatsScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(title: Text('Liked Cats')),
         body: BlocBuilder<LikedCatsCubit, LikedCatsState>(
-            builder: (context, state) {
-              final breeds = state.likedCats.map((e) => e.cat.breed).toSet().toList();
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DropdownButton<String>(
-                      value: state.breedFilter ?? '',
-                      hint: Text('Фильтр по породе'),
-                      items: [
-                        DropdownMenuItem(value: '', child: Text('Все породы')),
-                        ...breeds.map((b) => DropdownMenuItem(value: b, child: Text(b))).toList(),
-                      ],
-                      onChanged: (breed) => context.read<LikedCatsCubit>().setBreedFilter(breed ?? ''),
-                    ),
+          builder: (context, state) {
+            final breeds = state.likedCats.map((e) => e.cat.breed).toSet().toList();
+            return Column(
+              children: [
+                LikedCatsFilter(
+                  breeds: breeds,
+                  selected: state.breedFilter ?? '',
+                ),
+                Expanded(
+                  child: state.filteredCats.isEmpty
+                      ? Center(child: Text('Нет лайкнутых котиков'))
+                      : ListView.builder(
+                    itemCount: state.filteredCats.length,
+                    itemBuilder: (context, i) {
+                      final liked = state.filteredCats[i];
+                      return LikedCatCard(
+                        likedCat: liked,
+                        onDelete: () => context.read<LikedCatsCubit>().removeCat(liked),
+                      );
+                    },
                   ),
-                  state.filteredCats.isEmpty
-                      ? Expanded(child: Center(child: Text('Нет лайкнутых котиков')))
-                      : Expanded(
-                    child: ListView.builder(
-                      itemCount: state.filteredCats.length,
-                      itemBuilder: (context, i) {
-                        final liked = state.filteredCats[i];
-                        return Card(
-                          child: ListTile(
-                            leading: CachedNetworkImage(
-                              imageUrl: liked.cat.imageUrl,
-                              placeholder: (_, __) => CircularProgressIndicator(),
-                              width: 60, height: 60,
-                            ),
-                            title: Text(liked.cat.breed),
-                            subtitle: Text('Лайк: ${liked.likedAt}'),
-                            trailing: IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () => context.read<LikedCatsCubit>().removeCat(liked),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              );
-            }
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

@@ -8,8 +8,8 @@ import '../widgets/app_bar.dart';
 import '../widgets/breed_text.dart';
 import '../widgets/cat_image.dart';
 import '../widgets/action_buttons.dart';
-import 'liked_cats_screen.dart';
 import '../cubit/liked_cats_cubit.dart';
+import 'liked_cats_screen.dart';
 
 class CatScreen extends StatefulWidget {
   const CatScreen({super.key});
@@ -79,11 +79,11 @@ class _CatScreenState extends State<CatScreen> {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => LikedCatsScreen(),
+                                builder: (_) => const LikedCatsScreen(),
                               ),
                             );
                           },
-                          icon: Icon(Icons.favorite),
+                          icon: const Icon(Icons.favorite),
                           label: Text('Любимчики ($likedCount)'),
                         );
                       },
