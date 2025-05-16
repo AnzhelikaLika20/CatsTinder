@@ -68,4 +68,4 @@
 
 # Актуальная версия APK
 
-https://github.com/AnzhelikaLika20/CatsTinder/releases/tag/0.0.2
+https://github.com/AnzhelikaLika20/CatsTinder/releases/tag/v0.0.2

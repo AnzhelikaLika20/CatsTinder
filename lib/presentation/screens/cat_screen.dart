@@ -92,7 +92,7 @@ class _CatScreenState extends State<CatScreen> {
           children: [
             const SizedBox(height: 26),
             BreedText(cat: _cat),
-            const SizedBox(height: 8),
+            const SizedBox(height: 20),
             Center(
               child: SizedBox(
                 width: imgWidth,
@@ -121,12 +121,12 @@ class _CatScreenState extends State<CatScreen> {
                         ),
               ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 40),
             const FavoriteCounterButton(),
             const SizedBox(height: 10),
             const Expanded(child: SizedBox.shrink()),
             Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
+              padding: const EdgeInsets.only(bottom: 45.0),
               child: ActionButtons(
                 onLike: () {
                   if (_cat != null) {
