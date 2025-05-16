@@ -12,40 +12,33 @@ class ActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    return Positioned(
-      top: screenHeight * 0.75,
-      left: 0,
-      right: 0,
-      child: Container(
-        color: Colors.transparent,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: Image.asset('assets/dislike.png'),
-                  ),
-                  onPressed: onDislike,
+    return Container(
+      color: Colors.transparent,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: Image.asset('assets/dislike.png'),
                 ),
-                const SizedBox(width: 60),
-                IconButton(
-                  icon: SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: Image.asset('assets/like.png'),
-                  ),
-                  onPressed: onLike,
+                onPressed: onDislike,
+              ),
+              const SizedBox(width: 60),
+              IconButton(
+                icon: SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: Image.asset('assets/like.png'),
                 ),
-              ],
-            ),
-          ],
-        ),
+                onPressed: onLike,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

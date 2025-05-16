@@ -80,35 +80,51 @@ class _CatScreenState extends State<CatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double imgHeight = MediaQuery.of(context).size.height * 0.35;
+    final double imgWidth = MediaQuery.of(context).size.width * 0.8;
+
     return Scaffold(
       appBar: const CustomAppBar(),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
-          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Spacer(),
+            const SizedBox(height: 26),
             BreedText(cat: _cat),
-            const Spacer(),
-            _cat != null
-                ? CatImage(
-                  cat: _cat!,
-                  isLoading: _isLoading,
-                  onDismissed: _handleSwipe,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailScreen(cat: _cat!),
-                      ),
-                    );
-                  },
-                )
-                : const CircularProgressIndicator(),
-            const Spacer(),
+            const SizedBox(height: 8),
+            Center(
+              child: SizedBox(
+                width: imgWidth,
+                height: imgHeight,
+                child:
+                    _cat != null
+                        ? CatImage(
+                          cat: _cat!,
+                          isLoading: _isLoading,
+                          onDismissed: _handleSwipe,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailScreen(cat: _cat!),
+                              ),
+                            );
+                          },
+                        )
+                        : const Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Color(0xFFF8BBD0),
+                            ),
+                          ),
+                        ),
+              ),
+            ),
+            const SizedBox(height: 18),
             const FavoriteCounterButton(),
-            const Spacer(),
+            const SizedBox(height: 10),
+            const Expanded(child: SizedBox.shrink()),
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: ActionButtons(
@@ -121,7 +137,6 @@ class _CatScreenState extends State<CatScreen> {
                 onDislike: _fetchCat,
               ),
             ),
-            const Spacer(),
           ],
         ),
       ),
