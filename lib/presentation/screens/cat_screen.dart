@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../domain/entity/cat.dart';
+import '../../data/cat_repository_impl.dart';
+import '../cubit/liked_cats_cubit.dart';
+import '../widgets/action_buttons.dart';
 import '../widgets/app_bar.dart';
 import '../widgets/breed_text.dart';
 import '../widgets/cat_image.dart';
-import '../widgets/action_buttons.dart';
 import '../widgets/favorite_counter_button.dart';
-import '../cubit/liked_cats_cubit.dart';
-import 'detail_screen.dart';
-import '../../data/cat_repository_impl.dart';
+import '../screens/detail_screen.dart';
+import '../widgets/connectivity_listener.dart';
 
 class CatScreen extends StatefulWidget {
   const CatScreen({super.key});
@@ -48,7 +49,6 @@ class _CatScreenState extends State<CatScreen> {
         _isLoading = false;
       });
 
-      // При ошибке сети показываем SnackBar, а не диалог
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Нет сети. Показан последний загруженный котик'),
@@ -75,60 +75,62 @@ class _CatScreenState extends State<CatScreen> {
     final double imgHeight = MediaQuery.of(context).size.height * 0.35;
     final double imgWidth = MediaQuery.of(context).size.width * 0.8;
 
-    return Scaffold(
-      appBar: const CustomAppBar(),
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 26),
-            BreedText(cat: _cat),
-            const SizedBox(height: 20),
-            Center(
-              child: SizedBox(
-                width: imgWidth,
-                height: imgHeight,
-                child: _cat != null
-                    ? CatImage(
-                  cat: _cat!,
-                  isLoading: _isLoading,
-                  onDismissed: _handleSwipe,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailScreen(cat: _cat!),
+    return ConnectivityListener(
+      child: Scaffold(
+        appBar: const CustomAppBar(),
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 26),
+              BreedText(cat: _cat),
+              const SizedBox(height: 20),
+              Center(
+                child: SizedBox(
+                  width: imgWidth,
+                  height: imgHeight,
+                  child: _cat != null
+                      ? CatImage(
+                    cat: _cat!,
+                    isLoading: _isLoading,
+                    onDismissed: _handleSwipe,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailScreen(cat: _cat!),
+                        ),
+                      );
+                    },
+                  )
+                      : const Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Color(0xFFF8BBD0),
                       ),
-                    );
-                  },
-                )
-                    : const Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Color(0xFFF8BBD0),
                     ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 40),
-            const FavoriteCounterButton(),
-            const SizedBox(height: 10),
-            const Expanded(child: SizedBox.shrink()),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 45.0),
-              child: ActionButtons(
-                onLike: () {
-                  if (_cat != null) {
-                    _likeAndSaveCat();
-                    _fetchCat();
-                  }
-                },
-                onDislike: _fetchCat,
+              const SizedBox(height: 40),
+              const FavoriteCounterButton(),
+              const SizedBox(height: 10),
+              const Expanded(child: SizedBox.shrink()),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 45.0),
+                child: ActionButtons(
+                  onLike: () {
+                    if (_cat != null) {
+                      _likeAndSaveCat();
+                      _fetchCat();
+                    }
+                  },
+                  onDislike: _fetchCat,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
