@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../domain/entity/liked_cat.dart';
 
 class LikedCatCard extends StatelessWidget {
@@ -22,11 +23,23 @@ class LikedCatCard extends StatelessWidget {
       child: ListTile(
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: Image.network(
-            likedCat.cat.imageUrl,
+          child: CachedNetworkImage(
+            imageUrl: likedCat.cat.imageUrl,
             width: 56,
             height: 56,
             fit: BoxFit.cover,
+            placeholder: (context, url) => const SizedBox(
+              width: 24,
+              height: 24,
+              child: Center(
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            ),
+            errorWidget: (context, url, error) => const Icon(
+              Icons.broken_image,
+              size: 56,
+              color: Color(0xFFF06292),
+            ),
           ),
         ),
         title: Text(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../domain/entity/cat.dart';
-import '../../services/cat_service.dart';
 import '../widgets/app_bar.dart';
 import '../widgets/breed_text.dart';
 import '../widgets/cat_image.dart';
@@ -10,6 +9,7 @@ import '../widgets/action_buttons.dart';
 import '../widgets/favorite_counter_button.dart';
 import '../cubit/liked_cats_cubit.dart';
 import 'detail_screen.dart';
+import '../../data/cat_repository_impl.dart';
 
 class CatScreen extends StatefulWidget {
   const CatScreen({super.key});
@@ -31,36 +31,28 @@ class _CatScreenState extends State<CatScreen> {
   Future<void> _fetchCat() async {
     setState(() {
       _isLoading = true;
-      _cat = null;
     });
 
     try {
-      final cat = await CatService().fetchRandomCat();
+      final cat = await GetIt.I<CatRepositoryImpl>().fetchRandomCat();
+      if (!mounted) return;
+
       setState(() {
         _cat = cat;
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
+
       setState(() {
         _isLoading = false;
       });
-      if (!mounted) return;
-      showDialog(
-        context: context,
-        builder:
-            (context) => AlertDialog(
-              backgroundColor: Colors.white,
-              title: const Text('Ошибка сети'),
-              content: Text(
-                'Не удалось загрузить котика. Проверьте соединение с интернетом.\n$e',
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('OK'),
-                ),
-              ],
-            ),
+
+      // При ошибке сети показываем SnackBar, а не диалог
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Нет сети. Показан последний загруженный котик'),
+        ),
       );
     }
   }
@@ -97,28 +89,27 @@ class _CatScreenState extends State<CatScreen> {
               child: SizedBox(
                 width: imgWidth,
                 height: imgHeight,
-                child:
-                    _cat != null
-                        ? CatImage(
-                          cat: _cat!,
-                          isLoading: _isLoading,
-                          onDismissed: _handleSwipe,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DetailScreen(cat: _cat!),
-                              ),
-                            );
-                          },
-                        )
-                        : const Center(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Color(0xFFF8BBD0),
-                            ),
-                          ),
-                        ),
+                child: _cat != null
+                    ? CatImage(
+                  cat: _cat!,
+                  isLoading: _isLoading,
+                  onDismissed: _handleSwipe,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailScreen(cat: _cat!),
+                      ),
+                    );
+                  },
+                )
+                    : const Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Color(0xFFF8BBD0),
+                    ),
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 40),

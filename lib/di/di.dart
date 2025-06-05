@@ -1,10 +1,14 @@
 import 'package:get_it/get_it.dart';
+import '../data/database.dart';
 import '../data/cat_repository_impl.dart';
 import '../presentation/cubit/liked_cats_cubit.dart';
 
 final getIt = GetIt.instance;
 
-void setupDI() {
-  getIt.registerSingleton<LikedCatsCubit>(LikedCatsCubit());
-  getIt.registerSingleton<CatRepositoryImpl>(CatRepositoryImpl());
+Future<void> setupDI() async {
+  final database = AppDatabase();
+
+  getIt.registerSingleton<AppDatabase>(database);
+  getIt.registerSingleton<CatRepositoryImpl>(CatRepositoryImpl(database: database));
+  getIt.registerSingleton<LikedCatsCubit>(LikedCatsCubit(database: database));
 }

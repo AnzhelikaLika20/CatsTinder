@@ -1,19 +1,21 @@
 import 'package:bloc/bloc.dart';
-import '../../domain/entity/liked_cat.dart';
-import '../../domain/entity/cat.dart';
+
+import '../../data/database.dart' as db;
+import '../../domain/entity/cat.dart' as domain_cat;
+import '../../domain/entity/liked_cat.dart' as domain_liked_cat;
 
 class LikedCatsState {
-  final List<LikedCat> likedCats;
+  final List<domain_liked_cat.LikedCat> likedCats;
   final String? breedFilter;
 
   LikedCatsState({required this.likedCats, required this.breedFilter});
 
-  List<LikedCat> get filteredCats =>
+  List<domain_liked_cat.LikedCat> get filteredCats =>
       breedFilter == null || breedFilter == ''
           ? likedCats
           : likedCats.where((cat) => cat.cat.breed == breedFilter).toList();
 
-  LikedCatsState copyWith({List<LikedCat>? likedCats, String? breedFilter}) =>
+  LikedCatsState copyWith({List<domain_liked_cat.LikedCat>? likedCats, String? breedFilter}) =>
       LikedCatsState(
         likedCats: likedCats ?? this.likedCats,
         breedFilter: breedFilter ?? this.breedFilter,
@@ -21,25 +23,52 @@ class LikedCatsState {
 }
 
 class LikedCatsCubit extends Cubit<LikedCatsState> {
-  LikedCatsCubit() : super(LikedCatsState(likedCats: [], breedFilter: null));
+  final db.AppDatabase database;
 
-  void addCat(Cat cat) {
-    emit(
-      state.copyWith(
-        likedCats: [
-          ...state.likedCats,
-          LikedCat(cat: cat, likedAt: DateTime.now()),
-        ],
-      ),
-    );
+  LikedCatsCubit({required this.database}) : super(LikedCatsState(likedCats: [], breedFilter: null)) {
+    _init();
   }
 
-  void removeCat(LikedCat likedCat) {
-    emit(
-      state.copyWith(
-        likedCats: state.likedCats.where((c) => c != likedCat).toList(),
-      ),
-    );
+  Future<void> _init() async {
+    await _loadLikedCats();
+  }
+
+  Future<void> _loadLikedCats() async {
+    final likedRows = await database.getAllLikedCats();
+    List<domain_liked_cat.LikedCat> likedCats = [];
+
+    for (final likedRow in likedRows) {
+      final catRow = await database.getCatById(likedRow.catId);
+      if (catRow != null) {
+        likedCats.add(domain_liked_cat.LikedCat(
+          cat: domain_cat.Cat(
+            id: catRow.id,
+            imageUrl: catRow.imageUrl,
+            breed: catRow.breed,
+            description: catRow.description,
+          ),
+          likedAt: likedRow.likedAt,
+        ));
+      }
+    }
+
+    emit(state.copyWith(likedCats: likedCats));
+  }
+
+  Future<void> addCat(domain_cat.Cat cat) async {
+    final likedAt = DateTime.now();
+    await database.likeCat(cat.id, likedAt);
+
+    final likedCat = domain_liked_cat.LikedCat(cat: cat, likedAt: likedAt);
+
+    emit(state.copyWith(likedCats: [...state.likedCats, likedCat]));
+  }
+
+  Future<void> removeCat(domain_liked_cat.LikedCat likedCat) async {
+    await database.unlikeCat(likedCat.cat.id);
+
+    final newList = state.likedCats.where((c) => c.cat.id != likedCat.cat.id).toList();
+    emit(state.copyWith(likedCats: newList));
   }
 
   void setBreedFilter(String? breed) {

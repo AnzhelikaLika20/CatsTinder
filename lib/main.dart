@@ -52,7 +52,11 @@ class MyApp extends StatelessWidget {
   }
 }
 
-void main() {
-  setupDI();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await setupDI();
+
   runApp(const MyApp());
 }
+
