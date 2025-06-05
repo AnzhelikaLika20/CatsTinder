@@ -18,7 +18,8 @@ class Cats extends Table {
 }
 
 class LikedCats extends Table {
-  TextColumn get catId => text().customConstraint('REFERENCES cats(id) ON DELETE CASCADE')();
+  TextColumn get catId =>
+      text().customConstraint('REFERENCES cats(id) ON DELETE CASCADE')();
 
   DateTimeColumn get likedAt => dateTime()();
 
@@ -38,22 +39,21 @@ class AppDatabase extends _$AppDatabase {
   Future<Cat?> getCatById(String id) =>
       (select(cats)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
 
-  Future<void> insertCat(Cat cat) =>
-      into(cats).insertOnConflictUpdate(cat);
+  Future<void> insertCat(Cat cat) => into(cats).insertOnConflictUpdate(cat);
 
-  Future<List<LikedCat>> getAllLikedCats() => (select(likedCats)
-    ..orderBy([(t) => OrderingTerm(expression: t.likedAt, mode: OrderingMode.desc)]))
-      .get();
+  Future<List<LikedCat>> getAllLikedCats() =>
+      (select(likedCats)..orderBy([
+        (t) => OrderingTerm(expression: t.likedAt, mode: OrderingMode.desc),
+      ])).get();
 
   Future<void> likeCat(String catId, DateTime likedAt) async {
     final catExists = await getCatById(catId);
     if (catExists == null) {
       throw Exception('Cat should exist before liking');
     }
-    await into(likedCats).insertOnConflictUpdate(LikedCatsCompanion(
-      catId: Value(catId),
-      likedAt: Value(likedAt),
-    ));
+    await into(likedCats).insertOnConflictUpdate(
+      LikedCatsCompanion(catId: Value(catId), likedAt: Value(likedAt)),
+    );
   }
 
   Future<void> unlikeCat(String catId) =>
@@ -61,7 +61,8 @@ class AppDatabase extends _$AppDatabase {
 
   Future<bool> isCatLiked(String catId) async {
     final likedCat =
-    await (select(likedCats)..where((t) => t.catId.equals(catId))).getSingleOrNull();
+        await (select(likedCats)
+          ..where((t) => t.catId.equals(catId))).getSingleOrNull();
     return likedCat != null;
   }
 }

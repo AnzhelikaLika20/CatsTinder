@@ -10,7 +10,9 @@ Future<void> setupDI() async {
   final database = AppDatabase();
 
   getIt.registerSingleton<AppDatabase>(database);
-  getIt.registerSingleton<CatRepositoryImpl>(CatRepositoryImpl(database: database));
+  getIt.registerSingleton<CatRepositoryImpl>(
+    CatRepositoryImpl(database: database),
+  );
   getIt.registerSingleton<LikedCatsCubit>(LikedCatsCubit(database: database));
   getIt.registerSingleton<ConnectivityCubit>(ConnectivityCubit());
 }

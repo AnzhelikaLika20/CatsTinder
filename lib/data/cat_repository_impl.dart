@@ -19,7 +19,7 @@ class CatRepositoryImpl {
         Uri.parse('$_baseUrl?has_breeds=true'),
         headers: {
           'x-api-key':
-          'live_Glq2WZtc9HQzJWoik4ouHXtOc8nu171Y8QuCc93OvJEkOoemf0aBqgzwi3ivSh0e',
+              'live_Glq2WZtc9HQzJWoik4ouHXtOc8nu171Y8QuCc93OvJEkOoemf0aBqgzwi3ivSh0e',
         },
       );
 

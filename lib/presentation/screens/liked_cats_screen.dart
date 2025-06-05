@@ -22,7 +22,7 @@ class LikedCatsScreen extends StatelessWidget {
           body: BlocBuilder<LikedCatsCubit, LikedCatsState>(
             builder: (context, state) {
               final breeds =
-              state.likedCats.map((e) => e.cat.breed).toSet().toList();
+                  state.likedCats.map((e) => e.cat.breed).toSet().toList();
               return Column(
                 children: [
                   LikedCatsFilter(
@@ -30,29 +30,31 @@ class LikedCatsScreen extends StatelessWidget {
                     selected: state.breedFilter ?? '',
                   ),
                   Expanded(
-                    child: state.filteredCats.isEmpty
-                        ? const Center(
-                      child: Text(
-                        'Нет лайкнутых котиков',
-                        style: TextStyle(
-                          fontFamily: 'CustomFont',
-                          fontSize: 20,
-                          color: Color(0xFF757575),
-                        ),
-                      ),
-                    )
-                        : ListView.builder(
-                      itemCount: state.filteredCats.length,
-                      itemBuilder: (context, i) {
-                        final liked = state.filteredCats[i];
-                        return LikedCatCard(
-                          likedCat: liked,
-                          onDelete: () => context
-                              .read<LikedCatsCubit>()
-                              .removeCat(liked),
-                        );
-                      },
-                    ),
+                    child:
+                        state.filteredCats.isEmpty
+                            ? const Center(
+                              child: Text(
+                                'Нет лайкнутых котиков',
+                                style: TextStyle(
+                                  fontFamily: 'CustomFont',
+                                  fontSize: 20,
+                                  color: Color(0xFF757575),
+                                ),
+                              ),
+                            )
+                            : ListView.builder(
+                              itemCount: state.filteredCats.length,
+                              itemBuilder: (context, i) {
+                                final liked = state.filteredCats[i];
+                                return LikedCatCard(
+                                  likedCat: liked,
+                                  onDelete:
+                                      () => context
+                                          .read<LikedCatsCubit>()
+                                          .removeCat(liked),
+                                );
+                              },
+                            ),
                   ),
                 ],
               );

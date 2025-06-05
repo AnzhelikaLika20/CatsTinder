@@ -86,37 +86,33 @@ class _CatScreenState extends State<CatScreen> {
               const SizedBox(height: 26),
               BreedText(cat: _cat),
               const SizedBox(height: 20),
-              Center(
-                child: SizedBox(
-                  width: imgWidth,
-                  height: imgHeight,
-                  child: _cat != null
-                      ? CatImage(
-                    cat: _cat!,
-                    isLoading: _isLoading,
-                    onDismissed: _handleSwipe,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailScreen(cat: _cat!),
-                        ),
-                      );
-                    },
-                  )
-                      : const Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Color(0xFFF8BBD0),
-                      ),
-                    ),
+              Expanded(
+                child: Center(
+                  child: SizedBox(
+                    width: imgWidth,
+                    height: imgHeight,
+                    child:
+                        _cat != null
+                            ? CatImage(
+                              cat: _cat!,
+                              isLoading: _isLoading,
+                              onDismissed: _handleSwipe,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => DetailScreen(cat: _cat!),
+                                  ),
+                                );
+                              },
+                            )
+                            : const Center(child: CircularProgressIndicator()),
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
               const FavoriteCounterButton(),
               const SizedBox(height: 10),
-              const Expanded(child: SizedBox.shrink()),
               Padding(
                 padding: const EdgeInsets.only(bottom: 45.0),
                 child: ActionButtons(

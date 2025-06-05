@@ -15,17 +15,20 @@ class LikedCatsState {
           ? likedCats
           : likedCats.where((cat) => cat.cat.breed == breedFilter).toList();
 
-  LikedCatsState copyWith({List<domain_liked_cat.LikedCat>? likedCats, String? breedFilter}) =>
-      LikedCatsState(
-        likedCats: likedCats ?? this.likedCats,
-        breedFilter: breedFilter ?? this.breedFilter,
-      );
+  LikedCatsState copyWith({
+    List<domain_liked_cat.LikedCat>? likedCats,
+    String? breedFilter,
+  }) => LikedCatsState(
+    likedCats: likedCats ?? this.likedCats,
+    breedFilter: breedFilter ?? this.breedFilter,
+  );
 }
 
 class LikedCatsCubit extends Cubit<LikedCatsState> {
   final db.AppDatabase database;
 
-  LikedCatsCubit({required this.database}) : super(LikedCatsState(likedCats: [], breedFilter: null)) {
+  LikedCatsCubit({required this.database})
+    : super(LikedCatsState(likedCats: [], breedFilter: null)) {
     _init();
   }
 
@@ -40,15 +43,17 @@ class LikedCatsCubit extends Cubit<LikedCatsState> {
     for (final likedRow in likedRows) {
       final catRow = await database.getCatById(likedRow.catId);
       if (catRow != null) {
-        likedCats.add(domain_liked_cat.LikedCat(
-          cat: domain_cat.Cat(
-            id: catRow.id,
-            imageUrl: catRow.imageUrl,
-            breed: catRow.breed,
-            description: catRow.description,
+        likedCats.add(
+          domain_liked_cat.LikedCat(
+            cat: domain_cat.Cat(
+              id: catRow.id,
+              imageUrl: catRow.imageUrl,
+              breed: catRow.breed,
+              description: catRow.description,
+            ),
+            likedAt: likedRow.likedAt,
           ),
-          likedAt: likedRow.likedAt,
-        ));
+        );
       }
     }
 
@@ -67,7 +72,8 @@ class LikedCatsCubit extends Cubit<LikedCatsState> {
   Future<void> removeCat(domain_liked_cat.LikedCat likedCat) async {
     await database.unlikeCat(likedCat.cat.id);
 
-    final newList = state.likedCats.where((c) => c.cat.id != likedCat.cat.id).toList();
+    final newList =
+        state.likedCats.where((c) => c.cat.id != likedCat.cat.id).toList();
     emit(state.copyWith(likedCats: newList));
   }
 

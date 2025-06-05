@@ -28,18 +28,20 @@ class LikedCatCard extends StatelessWidget {
             width: 56,
             height: 56,
             fit: BoxFit.cover,
-            placeholder: (context, url) => const SizedBox(
-              width: 24,
-              height: 24,
-              child: Center(
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            ),
-            errorWidget: (context, url, error) => const Icon(
-              Icons.broken_image,
-              size: 56,
-              color: Color(0xFFF06292),
-            ),
+            placeholder:
+                (context, url) => const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+            errorWidget:
+                (context, url, error) => const Icon(
+                  Icons.broken_image,
+                  size: 56,
+                  color: Color(0xFFF06292),
+                ),
           ),
         ),
         title: Text(
